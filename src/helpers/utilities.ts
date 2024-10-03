@@ -15,3 +15,8 @@ export function formatDate(dateStr: string):string {
     return new Intl.DateTimeFormat('es-ES', options).format(dateObject)
 
 }
+
+export function separateDate(date: string) : string {
+    const formattedLeaveDate = new Date(date).toISOString().split('T')[0];
+    return formattedLeaveDate
+}

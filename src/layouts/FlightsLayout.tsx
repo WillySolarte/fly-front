@@ -27,12 +27,7 @@ export default function FlightsLayout() {
 
     function closeSession(){
         logOutUser();
-        if(pathname === '/'){
-            window.location.reload();
-        }
-        else{
-            navigate('/')
-        }
+        window.location.reload();
 
         
 
@@ -51,10 +46,15 @@ export default function FlightsLayout() {
 
                 </div>
                 <div className=" flex items-center justify-center text-white gap-x-4 px-6">
-                    <a href="#">Estadísticas</a>
-                    <a href="#">Home</a>
+                    <Link to={'/aerlines/show'} >Estadísticas</Link>
+                    <Link to={'/'} >Home</Link>
                     {activeUser && (
-                        <Link to={'/register/flight'}  >Registrar vuelo</Link>
+                        <>
+                            <Link to={'/register/flight'}  >Registrar vuelo</Link>
+                            <Link to={'/flight/my-flights'}  >Mis vuelos</Link>
+                            <Link to={`/flight/show`}  >Reservar</Link>
+                        </>
+                        
                     )}
                     
                 </div>

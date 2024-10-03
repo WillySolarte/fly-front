@@ -44,11 +44,23 @@ export const flightSchema = z.object({
     airline: z.string(),
     leave: z.string(),
     arrive: z.string(),
+    reserve: z.boolean(),
     createdAt: z.string(),
     updatedAt: z.string()
 })
 export const flightsSchema = z.array(flightSchema)
 
+
 export type Flight = z.infer<typeof flightSchema>
 
 export type FlightForm = Pick<Flight, 'name' | 'origin' | 'destination' | 'price' | 'airline' | 'leave' | 'arrive'>
+
+/**Type aerlines */
+
+export const aerlinesSchema = z.object({
+    reservationsCount: z.number(),
+    vuelo: z.object({
+        airline: z.string()
+    })
+})
+export const aerlinesDataSchema = z.array(aerlinesSchema)

@@ -1,53 +1,71 @@
-import { useForm } from "react-hook-form";
-import { FlightForm } from "../../types/schemas";
-import ErrorMessage from "../../components/ErrorMessage";
-import { toast } from "react-toastify";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createRegisterFlight } from "../../services/flightServices";
+import { useForm } from "react-hook-form"
+import { Flight, FlightForm } from "../../types/schemas"
+import ErrorMessage from "../ErrorMessage"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { toast } from "react-toastify"
+import { separateDate } from "../../helpers/utilities"
+import { updateFlight } from "../../services/flightServices"
+import { useNavigate } from "react-router-dom"
 
-export default function RegisterFlightView() {
+type FormUpdateFlightProps = {
+    data: Flight,
+    flightId: Flight['id']
+}
 
-    const initialValues: FlightForm = {
-        name: "",
-        origin: "",
-        destination: "",
-        price: 1000,
-        airline: '',
-        leave: '',
-        arrive: ''
-    };
+export default function FormUpdateFlight({ data, flightId }: FormUpdateFlightProps) {
 
+    const initialValues : FlightForm = {
+        name: data.name,
+        origin: data.origin,
+        destination: data.destination,
+        price: data.price,
+        airline: data.airline,
+        leave: separateDate(data.leave),
+        arrive: separateDate(data.arrive)
+    }
+    const {register, handleSubmit, formState: {errors}, watch, reset} = useForm({defaultValues: initialValues})
 
-    const { register, handleSubmit, reset, formState: { errors }, watch } = useForm<FlightForm>({ defaultValues: initialValues });
-
+    
     const leaveDate = watch("leave")
 
     const queryClient = useQueryClient()
-
+    const navigate = useNavigate()
+    
     const {mutate} = useMutation({
-        mutationFn: createRegisterFlight,
+        mutationFn: updateFlight,
         onError: (error) => {
             toast.error(error.message)
         },
         onSuccess: (response) => {
-            toast.success(response)
-            reset()
+
             queryClient.invalidateQueries({queryKey: ['Myflights']})
             queryClient.invalidateQueries({queryKey: ['flights']})
+            queryClient.invalidateQueries({queryKey: ['flight', flightId]})
+            
+            toast.success(response)
+            reset()
+            navigate('/')
             
         }
     })
-
-    async function handleRegister(formData: FlightForm) {
-        mutate(formData)
+    
+   
+    function handleRegister(formData: FlightForm){
+        const finalData = {
+            flightId,
+            formData
+            
+        }
+        mutate(finalData)
     }
 
 
     return (
+
         <>
 
             <h1 className="text-4xl font-black text-black">Crear Registro de Vuelo</h1>
-            
+
 
             <div className=" mx-auto w-[400px] lg:w-[500px]">
                 <form onSubmit={handleSubmit(handleRegister)} className="space-y-8 p-5  bg-slate-200 border shadow-lg mt-10 rouded rounded-lg" noValidate>
@@ -152,7 +170,7 @@ export default function RegisterFlightView() {
                 </form>
             </div>
 
-
         </>
+
     )
 }

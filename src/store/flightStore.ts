@@ -1,30 +1,33 @@
-import { FlightForm, StatusResponse } from './../types/schemas';
+import { StatusResponse } from './../types/schemas';
 import { create } from "zustand";
 
 //import { devtools } from "zustand/middleware";
 import { Flight, LoginForm } from "../types/schemas";
-import { createRegisterFlight, getFlights } from "../services/flightServices";
 import { loginUser, logout } from "../services/authServices";
 
 type FlighState = {
-    flights: Flight[],
-    getAllFlights: () => Promise<void>,
+    
+    editFlight: Flight,
     doLoginUser: (formData: LoginForm) => Promise<StatusResponse>,
     logOutUser: () => void,
-    createFlight: (formData: FlightForm) =>  Promise<string>
+    
 }
 
-export const useFlightStore = create<FlighState>((set) => ({
-    flights: [],
-    getAllFlights: async () => {
-        const myFlights = await getFlights()
-        
-        set(() => ({
-
-            flights: myFlights
-        }))
-            
+export const useFlightStore = create<FlighState>(() => ({
+    
+    editFlight: {
+        id: '',
+        name: "",
+        origin: "",
+        destination: "",
+        price: 1000,
+        airline: "",
+        leave: "",
+        arrive: "",
+        createdAt: "",
+        updatedAt: ""
     },
+   
     doLoginUser: async (info) => {
         const loginResult = await loginUser(info)
         if(loginResult.data){
@@ -39,10 +42,9 @@ export const useFlightStore = create<FlighState>((set) => ({
         logout()
         
     },
-    createFlight: async (info) => {
-        const result = await createRegisterFlight(info)
-        return result!
-        
-    }
+    
+    
+    
+    
 
 }))
