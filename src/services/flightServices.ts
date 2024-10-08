@@ -1,6 +1,6 @@
 import { isAxiosError } from "axios";
 import api from "../lib/axios";
-import { Flight, FlightForm, flightsSchema, flightSchema, aerlinesDataSchema } from "../types/schemas";
+import { Flight, FlightForm, flightsSchema, flightSchema } from "../types/schemas";
 
 export async function getFlights(){
 

@@ -1,37 +1,30 @@
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
+import { Link, Outlet } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { useFlightStore } from "../store/flightStore"
+import { useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { userExist } from "../services/authServices"
 
 export default function FlightsLayout() {
 
-    const navigate = useNavigate()
 
-    const {logOutUser} = useFlightStore()
-    const {pathname}  = useLocation()
-    const [activeUser, setActiveUser] = useState(false)
+    
+    
+    const queryClient = useQueryClient()
+    const [exist, setExist] = useState(false)
 
     useEffect(() => {
-        setActiveUser(userExist())
-        if(!activeUser && pathname !=='/'){
-            navigate('/')
-        }
+        setExist(userExist())
+    },[exist])
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
-
-    
-    
-
-    function closeSession(){
-        logOutUser();
+    async function closeSession(){
+        localStorage.removeItem('AUTH_TOKEN')
+        queryClient.invalidateQueries({queryKey: ['user']})
+        setExist( userExist())
         window.location.reload();
 
-        
-
     }
+    
     return (
         <>
 
@@ -48,7 +41,7 @@ export default function FlightsLayout() {
                 <div className=" flex items-center justify-center text-white gap-x-4 px-6">
                     <Link to={'/aerlines/show'} >Estadísticas</Link>
                     <Link to={'/'} >Home</Link>
-                    {activeUser && (
+                    {exist && (
                         <>
                             <Link to={'/register/flight'}  >Registrar vuelo</Link>
                             <Link to={'/flight/my-flights'}  >Mis vuelos</Link>
@@ -60,7 +53,7 @@ export default function FlightsLayout() {
                 </div>
                 <nav className="flex text-white font-bold space-x-3 px-6">
 
-                    {activeUser ? (
+                    {exist ? (
                         <button onClick={closeSession} type="button" className="hover:text-orange-700"  >Cerrar Sesión</button>
                     ): (
                         <Link className="hover:text-orange-700" to={'/auth/login'} >Iniciar Sesión</Link>

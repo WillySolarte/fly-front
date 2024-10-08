@@ -13,16 +13,6 @@ export const registerFormSchema = z.object({
 export type RegisterForm = z.infer<typeof registerFormSchema >
 
 
-export const statusResponseSchema = z.object({
-    error: z.string().nullable(),
-    data: z.object({
-        msg: z.string(),
-        data: z.string().nullable()
-    }).nullable(),
-    success: z.string()
-
-})
-export type StatusResponse = z.infer<typeof statusResponseSchema>
 
 export const userLoginSchema = z.object({
     email: z.string(),
@@ -30,6 +20,13 @@ export const userLoginSchema = z.object({
 })
 
 export type LoginForm = z.infer<typeof userLoginSchema>
+
+export const userSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    email: z.string(),
+})
+export type User = z.infer<typeof userSchema>
 
 
 /**Types of Flights */

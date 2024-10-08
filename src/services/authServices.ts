@@ -1,7 +1,7 @@
 import { isAxiosError } from "axios";
 
 import api from "../lib/axios";
-import { LoginForm, RegisterForm } from "../types/schemas";
+import { LoginForm, RegisterForm, User, userSchema } from "../types/schemas";
 
 export async function createAccount(formData: RegisterForm){
 
@@ -20,8 +20,8 @@ export async function loginUser(formData: LoginForm){
 
     try {
         const url = `/auth/login`
-        const {data} = await api.post(url, formData)
-        
+        const {data} = await api.post<string>(url, formData)
+        localStorage.setItem('AUTH_TOKEN', data)
         return data
     } catch (error) {
         if(isAxiosError(error) && error.response){
@@ -30,17 +30,27 @@ export async function loginUser(formData: LoginForm){
     }
 }
 
-export function logout(){
-    localStorage.removeItem('AUTH_TOKEN')
+export async function getUser(){
+
+    try {
+        const url = `/auth/user`
+        const {data} = await api.get<User>(url)
+        const response = userSchema.safeParse(data)
+        if(response.success){
+            return response.data
+        }
+    } catch (error) {
+        if(isAxiosError(error) && error.response){
+            throw new Error(error.response.data.error)
+        }
+    }
 }
+
+
 export function userExist() : boolean{
 
     const exist = localStorage.getItem('AUTH_TOKEN')
-    if(exist){
-        return true
-    }
-    else{
-        return false
-    }
+    return !!exist
+    
 
 }

@@ -1,5 +1,4 @@
 
-import FlightCard from "../../components/flight/FlightCard"
 import { useQuery } from "@tanstack/react-query"
 import { getFlights } from "../../services/flightServices"
 
@@ -20,18 +19,27 @@ export default function PrincipalView() {
      return (
     <div>
         <h1 className="font-bold text-4xl mb-5">Registro de Vuelos</h1>
-        <div className="grid grid-cols-1  lg:grid-cols-2 xl:grid-cols-3 gap-4">
-            {data.length ? (
-                
-                data.map(current => (
-                    <FlightCard key={current.id} flight={current}  />
-                ))
-
-            ): (
-                <p className="text-3xl mx-auto my-5 font-bold">No hay registro de vuelos aún</p>
-            )}
         
-        </div>
+        {data.length ? (
+            <ul role="list" className="divide-y divide-gray-100 border border-gray-100 mt-10 bg-white shadow-lg">
+                {data.map(current => (
+                    <li key={current.id}  className="flex justify-between gap-x-6 px-5 py-10">
+                        <div className="flex min-w-0 gap-x-4">
+                            <div className="min-w-0 flex-auto space-y-2">
+                                <p className="text-sm text-gray-400">Nombre de vuelo: {current.name}</p>
+                                <p className="text-sm text-gray-400">Aerolínea: {current.airline}</p>
+                                <p className="text-sm text-gray-400">Lugar de origen: {current.origin}</p>
+                                <p className="text-sm text-gray-400">Lugar de destino: {current.destination}</p>
+                            </div>
+                        </div>
+                    </li>
+                ))}
+
+
+            </ul>
+        ): (
+            <p className="text-3xl mx-auto my-5 font-bold">No hay registro de vuelos aún</p>
+        )}
 
     </div>
   )}

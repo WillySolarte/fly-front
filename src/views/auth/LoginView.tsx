@@ -4,8 +4,9 @@ import { useForm } from "react-hook-form";
 
 import ErrorMessage from "../../components/ErrorMessage"
 import { LoginForm } from "../../types/schemas";
+import { loginUser } from "../../services/authServices";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { useFlightStore } from "../../store/flightStore";
 
 
 export default function LoginView() {
@@ -15,9 +16,20 @@ export default function LoginView() {
     password: '',
   }
   const { register, handleSubmit, formState: { errors }, reset } = useForm({ defaultValues: initialValues })
-  const { doLoginUser} = useFlightStore()
 
   const navigate = useNavigate()
+
+  const {mutate} = useMutation({
+    mutationFn: loginUser,
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    onSuccess: () => {
+      reset()
+      toast.success("Usuario logeado")
+      navigate('/')
+    }
+  })
 
   
 
@@ -25,15 +37,7 @@ export default function LoginView() {
 
   const handleLogin = async (formData: LoginForm) => { 
 
-    
-    const {data, error} = await doLoginUser(formData)
-    if(error){
-      toast.error(error)
-    }
-    else if(data){
-      navigate('/')
-      reset()
-    }
+    mutate(formData)
     
   }
   

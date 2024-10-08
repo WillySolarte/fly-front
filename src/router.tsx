@@ -7,8 +7,7 @@ import PrincipalView from "./views/flight/PrincipalView";
 import RegisterFlightView from "./views/flight/RegisterFlightView";
 import MyFlightsView from "./views/flight/MyFlightsView";
 import EditFlightView from "./views/flight/EditFlightView";
-import WatchFlightView from "./views/flight/WatchFlightView";
-import AerlinesDataView from "./views/flight/AerlinesDataView";
+import UserActiveLayout from "./layouts/UserActiveLayout";
 
 export default function Router() {
   return (
@@ -18,11 +17,12 @@ export default function Router() {
 
         <Route element={<FlightsLayout />} >
           <Route path="/" element={<PrincipalView />} index/>
-          <Route path="/register/flight" element={<RegisterFlightView />} />
-          <Route path="/flight/my-flights" element={<MyFlightsView />} />
-          <Route path="/flight/edit/:flightId?" element={<EditFlightView />} />
-          <Route path="/flight/show" element={<WatchFlightView />} />
-          <Route path="/aerlines/show" element={<AerlinesDataView />} />
+          <Route element={<UserActiveLayout/>} >
+            <Route path="/register/flight" element={<RegisterFlightView />} />
+            <Route path="/flight/my-flights" element={<MyFlightsView />} />
+            <Route path="/flight/edit/:flightId?" element={<EditFlightView />} />
+          </Route>
+          
 
         </Route>
 
