@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
-import { getFlightById } from "../../services/flightServices"
+import { getAerlines, getFlightById } from "../../services/flightServices"
 import FormUpdateFlight from "../../components/flight/FormUpdateFlight"
 
 
@@ -13,15 +13,20 @@ export default function EditFlightView() {
     queryKey: ['flight', flightId],
     queryFn: () => getFlightById(flightId)
   })
+
+  const {data: aerlines} = useQuery({
+    queryKey: ['aerlines'],
+    queryFn: getAerlines
+})
   if (isLoading) {
     return "Cargando..."
   }
 
 
-  if(data) return (
+  if(data && aerlines) return (
     <>
 
-      <FormUpdateFlight data={data} flightId={flightId} />
+      <FormUpdateFlight data={data} flightId={flightId} aerlines={aerlines} />
     </>
   )
 }

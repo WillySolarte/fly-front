@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form"
-import { Flight, FlightForm } from "../../types/schemas"
+import { Aerline, Flight, FlightForm } from "../../types/schemas"
 import ErrorMessage from "../ErrorMessage"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "react-toastify"
@@ -10,18 +10,21 @@ import { useNavigate } from "react-router-dom"
 type FormUpdateFlightProps = {
     data: Flight,
     flightId: Flight['id']
+    aerlines: Aerline[]
 }
 
-export default function FormUpdateFlight({ data, flightId }: FormUpdateFlightProps) {
+export default function FormUpdateFlight({ data, flightId, aerlines }: FormUpdateFlightProps) {
+
+    
 
     const initialValues: FlightForm = {
-        name: data.name,
+        code: data.code,
         origin: data.origin,
         destination: data.destination,
         price: data.price,
-        airline: data.airline,
         leave: separateDate(data.leave),
-        arrive: separateDate(data.arrive)
+        arrive: separateDate(data.arrive),
+        aerlineId: data.aerlineId
     }
     const { register, handleSubmit, formState: { errors }, watch, reset } = useForm({ defaultValues: initialValues })
 
@@ -30,6 +33,10 @@ export default function FormUpdateFlight({ data, flightId }: FormUpdateFlightPro
 
     const queryClient = useQueryClient()
     const navigate = useNavigate()
+
+    
+
+    
 
     const { mutate } = useMutation({
         mutationFn: updateFlight,
@@ -58,7 +65,7 @@ export default function FormUpdateFlight({ data, flightId }: FormUpdateFlightPro
         }
         mutate(finalData)
     }
-
+    
 
     return (
 
@@ -70,15 +77,8 @@ export default function FormUpdateFlight({ data, flightId }: FormUpdateFlightPro
             <div className=" mx-auto w-[400px] lg:w-[500px]">
                 <form onSubmit={handleSubmit(handleRegister)} className="h-[550px] flex flex-col justify-evenly p-5  bg-slate-200 border shadow-lg mt-10 rouded rounded-lg" noValidate>
 
-                    <div className="flex flex-col gap-1">
-                        <label className="font-normal text-xl">Nombre vuelo</label>
-                        <input type="name" placeholder="Nombre de vuelo" className="w-full p-3  border-gray-300 border"
-                            {...register("name", {
-                                required: "El Nombre es obligatorio",
-                            })}
-                        />
-                        {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
-                    </div>
+
+
                     <div className=" flex justify-between">
                         <div className="flex flex-col gap-1 w-[45%]">
                             <label className="font-normal text-xl" htmlFor="origin">Origen</label>
@@ -123,19 +123,20 @@ export default function FormUpdateFlight({ data, flightId }: FormUpdateFlightPro
                         <div className="flex flex-col gap-1 w-[45%]">
                             <label className="font-normal text-xl" htmlFor="airline">Aerolínea</label>
 
-                            <select id="airline" className="w-full p-3 border-gray-300 border"
-                                {...register("airline", {
+                            <select id="aerlineId" className="w-full p-3 border-gray-300 border"
+                                {...register("aerlineId", {
                                     required: "La aerolínea es obligatoria",
                                 })}
                             >
                                 <option value="">-- Selecciona --</option>
-                                <option value="Avianca">Avianca</option>
-                                <option value="Wingo">Wingo</option>
-                                <option value="Satena">Satena</option>
+                                {aerlines.map(aerline => (
+                                    <option key={aerline.id} className="uppercase" value={aerline.id} > {aerline.name} </option>
+                                ))}
+                                
                             </select>
 
-                            {errors.airline && (
-                                <ErrorMessage>{errors.airline.message}</ErrorMessage>
+                            {errors.aerlineId && (
+                                <ErrorMessage>{errors.aerlineId.message}</ErrorMessage>
                             )}
                         </div>
                     </div>
@@ -169,10 +170,12 @@ export default function FormUpdateFlight({ data, flightId }: FormUpdateFlightPro
 
                     </div>
 
+
+
                     <input
                         type="submit"
                         value="Guardar Cambios"
-                        className="bg-orange-600 hover:bg-orange-700 w-full p-3  text-white font-black  text-xl cursor-pointer"
+                        className="bg-orange-600 hover:bg-orange-700 w-full p-3  text-white font-black  text-xl cursor-pointer mt-3"
                     />
                 </form>
             </div>

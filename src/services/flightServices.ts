@@ -68,9 +68,12 @@ export async function deleteFlight(id: Flight['id']){
 export async function getFlightById(id: Flight['id']){
 
     try {
+        
         const url = `/flight/${id}`
         const {data} = await api.get(url)
+        
         const response = flightSchema.safeParse(data)
+        
         if(response.success){
             return response.data
         }

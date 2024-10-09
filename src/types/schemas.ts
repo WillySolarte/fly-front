@@ -42,7 +42,7 @@ export const flightSchema = z.object({
     arrive: z.string(),
     aerline: z.object({
         name: z.string()
-    }),
+    }).optional(),
     aerlineId: z.string().optional(),
     createdAt: z.string(),
     updatedAt: z.string()
