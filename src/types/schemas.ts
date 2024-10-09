@@ -34,14 +34,16 @@ export type User = z.infer<typeof userSchema>
 export const flightSchema = z.object({
 
     id: z.string(),
-    name: z.string(),
+    code: z.string(),
     origin: z.string(),
     destination: z.string(),
     price: z.number(),
-    airline: z.string(),
     leave: z.string(),
     arrive: z.string(),
-    reserve: z.boolean(),
+    aerline: z.object({
+        name: z.string()
+    }),
+    aerlineId: z.string().optional(),
     createdAt: z.string(),
     updatedAt: z.string()
 })
@@ -50,14 +52,13 @@ export const flightsSchema = z.array(flightSchema)
 
 export type Flight = z.infer<typeof flightSchema>
 
-export type FlightForm = Pick<Flight, 'name' | 'origin' | 'destination' | 'price' | 'airline' | 'leave' | 'arrive'>
+export type FlightForm = Pick<Flight, 'code' | 'origin' | 'destination' | 'price' | 'leave' | 'arrive' | 'aerlineId'>
 
 /**Type aerlines */
 
-export const aerlinesSchema = z.object({
-    reservationsCount: z.number(),
-    vuelo: z.object({
-        airline: z.string()
-    })
+export const aerlineSchema = z.object({
+    id: z.string(),
+    name: z.string()
 })
-export const aerlinesDataSchema = z.array(aerlinesSchema)
+export const aerlinesSchema = z.array(aerlineSchema)
+export type Aerline = z.infer<typeof aerlineSchema>

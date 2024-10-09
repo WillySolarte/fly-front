@@ -39,7 +39,6 @@ export default function FlightsLayout() {
 
                 </div>
                 <div className=" flex items-center justify-center text-white gap-x-4 px-6">
-                    <Link to={'/aerlines/show'} >Estadísticas</Link>
                     <Link to={'/'} >Home</Link>
                     {exist && (
                         <>

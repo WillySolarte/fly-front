@@ -1,6 +1,6 @@
 import { isAxiosError } from "axios";
 import api from "../lib/axios";
-import { Flight, FlightForm, flightsSchema, flightSchema } from "../types/schemas";
+import { Flight, FlightForm, flightsSchema, flightSchema, aerlinesSchema } from "../types/schemas";
 
 export async function getFlights(){
 
@@ -116,13 +116,16 @@ export async function createReserve(id: Flight['id']){
     }
 }
 
-export async function getEstadistics(){
+export async function getAerlines(){
 
     try {
-        const url = `/data/aerlines`
+        const url = `/get-aerlines`
         const {data} = await api.get(url)
-        console.log(data)
-        return ""
+        const response = aerlinesSchema.safeParse(data)
+        if(response.success){
+            return response.data
+        }
+            
             
     } catch (error) {
         if(isAxiosError(error) && error.response){

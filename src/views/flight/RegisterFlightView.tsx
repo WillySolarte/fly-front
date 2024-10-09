@@ -2,19 +2,21 @@ import { useForm } from "react-hook-form";
 import { FlightForm } from "../../types/schemas";
 import ErrorMessage from "../../components/ErrorMessage";
 import { toast } from "react-toastify";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createRegisterFlight } from "../../services/flightServices";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createRegisterFlight, getAerlines } from "../../services/flightServices";
+import { generateCode } from "../../helpers/utilities";
+import { Navigate } from "react-router-dom";
 
 export default function RegisterFlightView() {
 
     const initialValues: FlightForm = {
-        name: "",
+        code: "",
         origin: "",
         destination: "",
         price: 1000,
-        airline: '',
         leave: '',
-        arrive: ''
+        arrive: '',
+        aerlineId: ''
     };
 
 
@@ -37,13 +39,26 @@ export default function RegisterFlightView() {
             
         }
     })
+    const {data, isError, isLoading} = useQuery({
+        queryKey: ['aerlines'],
+        queryFn: getAerlines
+    })
 
     async function handleRegister(formData: FlightForm) {
+        formData.code = generateCode()
+        
         mutate(formData)
+    }
+    if(isError){
+        return <Navigate to={'/'} />
+    }
+
+    if(isLoading){
+        return 'Cargango ...'
     }
 
 
-    return (
+    if(data)return (
         <>
 
             <h1 className="text-4xl font-black text-black">Crear Registro de Vuelo</h1>
@@ -52,15 +67,8 @@ export default function RegisterFlightView() {
             <div className=" mx-auto w-[400px] lg:w-[500px]">
                 <form onSubmit={handleSubmit(handleRegister)} className="h-[550px] flex flex-col justify-evenly p-5  bg-slate-200 border shadow-lg mt-10 rouded rounded-lg" noValidate>
 
-                    <div className="flex flex-col gap-1">
-                        <label className="font-normal text-xl">Nombre vuelo</label>
-                        <input type="name" placeholder="Nombre de vuelo" className="w-full p-3  border-gray-300 border"
-                            {...register("name", {
-                                required: "El Nombre es obligatorio",
-                            })}
-                        />
-                        {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
-                    </div>
+                    
+                    
                     <div className=" flex justify-between">
                         <div className="flex flex-col gap-1 w-[45%]">
                             <label className="font-normal text-xl" htmlFor="origin">Origen</label>
@@ -105,19 +113,19 @@ export default function RegisterFlightView() {
                         <div className="flex flex-col gap-1 w-[45%]">
                             <label className="font-normal text-xl" htmlFor="airline">Aerolínea</label>
 
-                            <select id="airline" className="w-full p-3 border-gray-300 border"
-                                {...register("airline", {
+                            <select id="aerlineId" className="w-full p-3 border-gray-300 border"
+                                {...register("aerlineId", {
                                     required: "La aerolínea es obligatoria",
                                 })}
                             >
                                 <option value="">-- Selecciona --</option>
-                                <option value="Avianca">Avianca</option>
-                                <option value="Wingo">Wingo</option>
-                                <option value="Satena">Satena</option>
+                                {data.map(aerline => (
+                                    <option key={aerline.id} className="uppercase" value={aerline.id} > {aerline.name} </option>
+                                ))}
                             </select>
 
-                            {errors.airline && (
-                                <ErrorMessage>{errors.airline.message}</ErrorMessage>
+                            {errors.aerlineId && (
+                                <ErrorMessage>{errors.aerlineId.message}</ErrorMessage>
                             )}
                         </div>
                     </div>
