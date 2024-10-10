@@ -1,6 +1,6 @@
 import { isAxiosError } from "axios";
 import api from "../lib/axios";
-import { Flight, FlightForm, flightsSchema, flightSchema, aerlinesSchema } from "../types/schemas";
+import { Flight, FlightForm, flightsSchema, flightSchema, aerlinesSchema, reserveExistSchema } from "../types/schemas";
 
 export async function getFlights(){
 
@@ -71,7 +71,24 @@ export async function getFlightById(id: Flight['id']){
         
         const url = `/flight/${id}`
         const {data} = await api.get(url)
+        const response = flightSchema.safeParse(data)
         
+        if(response.success){
+            return response.data
+        }
+            
+    } catch (error) {
+        if(isAxiosError(error) && error.response){
+            throw new Error(error.response.data.error)
+        }
+    }
+}
+export async function showFlightById(id: Flight['id']){
+
+    try {
+        
+        const url = `/show-flight/${id}`
+        const {data} = await api.get(url)
         const response = flightSchema.safeParse(data)
         
         if(response.success){
@@ -129,6 +146,26 @@ export async function getAerlines(){
             return response.data
         }
             
+            
+    } catch (error) {
+        if(isAxiosError(error) && error.response){
+            throw new Error(error.response.data.error)
+        }
+    }
+}
+
+export async function showExistReserve(id: Flight['id']){
+
+    try {
+        
+        const url = `/exist-reserve/${id}`
+        const {data} = await api.get(url)
+        const response = reserveExistSchema.safeParse(data)
+        
+        if(response.success){
+            return response.data
+        }
+        
             
     } catch (error) {
         if(isAxiosError(error) && error.response){

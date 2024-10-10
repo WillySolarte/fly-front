@@ -62,3 +62,8 @@ export const aerlineSchema = z.object({
 })
 export const aerlinesSchema = z.array(aerlineSchema)
 export type Aerline = z.infer<typeof aerlineSchema>
+
+/**Reserve */
+export const reserveExistSchema = z.object({
+    msg: z.string().nullable()
+})

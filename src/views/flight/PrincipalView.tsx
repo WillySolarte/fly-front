@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getFlights } from "../../services/flightServices"
 import { formatDate } from "../../helpers/utilities"
 import { useNavigate } from "react-router-dom"
-import ShowTask from "../../components/flight/ShowTask"
+import ShowTask from "../../components/flight/ShowFlight"
 
 export default function PrincipalView() {
 
