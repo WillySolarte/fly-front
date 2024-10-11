@@ -67,3 +67,22 @@ export type Aerline = z.infer<typeof aerlineSchema>
 export const reserveExistSchema = z.object({
     msg: z.string().nullable()
 })
+
+export const reserveSchema = z.object({
+    id: z.string(),
+    flightId: z.string(),
+    userId: z.string(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+    vuelo: z.object({
+        code: z.string(),
+        origin: z.string(),
+        destination: z.string(),
+        aerlineId: z.string(),
+        aerline: z.object({
+            name: z.string()
+        })
+    })
+       
+})
+export const reservesSchema = z.array(reserveSchema)

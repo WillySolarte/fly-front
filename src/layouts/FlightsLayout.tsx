@@ -44,7 +44,7 @@ export default function FlightsLayout() {
                         <>
                             <Link to={'/register/flight'}  >Registrar vuelo</Link>
                             <Link to={'/flight/my-flights'}  >Mis vuelos</Link>
-                            <Link to={`/flight/show`}  >Reservar</Link>
+                            <Link to={`/my-reserves`}  >Mis reservas</Link>
                         </>
                         
                     )}

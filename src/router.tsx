@@ -8,6 +8,7 @@ import RegisterFlightView from "./views/flight/RegisterFlightView";
 import MyFlightsView from "./views/flight/MyFlightsView";
 import EditFlightView from "./views/flight/EditFlightView";
 import UserActiveLayout from "./layouts/UserActiveLayout";
+import MyReservesView from "./views/reserve/MyReservesView";
 
 export default function Router() {
   return (
@@ -21,6 +22,7 @@ export default function Router() {
             <Route path="/register/flight" element={<RegisterFlightView />} />
             <Route path="/flight/my-flights" element={<MyFlightsView />} />
             <Route path="/flight/edit/:flightId?" element={<EditFlightView />} />
+            <Route path="/my-reserves" element={<MyReservesView />} />
           </Route>
           
 

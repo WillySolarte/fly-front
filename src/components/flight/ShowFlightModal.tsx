@@ -4,8 +4,9 @@ import { Flight } from "../../types/schemas"
 import { useNavigate } from "react-router-dom"
 import { formatDate } from "../../helpers/utilities"
 import { userExist } from "../../services/authServices"
-import { useQuery } from "@tanstack/react-query"
-import { showExistReserve } from "../../services/flightServices"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { folowReserve, showExistReserve } from "../../services/flightServices"
+import { toast } from "react-toastify"
 
 type ShowTaskModalProps = {
     data: Flight
@@ -15,11 +16,24 @@ export default function ShowTaskModal({ data }: ShowTaskModalProps) {
 
     const navigate = useNavigate();
     const userActive = userExist()
+    const queryClient = useQueryClient()
     const {data: reservado } = useQuery({
         queryKey:['reserveExist'],
         queryFn: () =>  showExistReserve(data.id),
         enabled: userActive,
         retry: false
+    })
+
+    const {mutate} = useMutation({
+        mutationFn: folowReserve,
+        onError: (error) => {
+            toast.error(error.message)
+        },
+        onSuccess: (response) => {
+            toast.success(response)
+            queryClient.invalidateQueries({queryKey: ['reserveExist']})
+            queryClient.invalidateQueries({queryKey: ['myReserves']})
+        }
     })
     
 
@@ -64,13 +78,13 @@ export default function ShowTaskModal({ data }: ShowTaskModalProps) {
                                 </div>
                                 <div className="flex justify-center">
                                     {userActive ? (
-                                        <button className="my-5 border bg-slate-500 w-1/3 h-9 text-white hover:bg-slate-600 transition-colors" type="button">{reservado?.msg}</button>
+                                        <button onClick={()=> mutate(data.id)} className="my-5 border bg-slate-500 w-2/3 h-9 text-white hover:bg-slate-600 transition-colors" type="button">{reservado?.msg}</button>
                                     ) :
                                     (
                                         <div className=" my-5 flex flex-col items-center">
-                                            <p className="text-slate-600">Si quiere hacer una reservación</p>
-                                            <p className="text-slate-600">debe iniciar sesión</p>
-                                            <a className="text-slate-600 font-bold hover:text-orange-600" href="/auth/login">Click Aquí</a>
+                                            <p className="text-slate-600 text-sm">Si quiere hacer una reservación</p>
+                                            <p className="text-slate-600 text-sm">debe iniciar sesión</p>
+                                            <a className="text-slate-600 font-bold hover:text-orange-600 text-sm" href="/auth/login">Click Aquí</a>
                                             
                                         </div>
                                     )}
