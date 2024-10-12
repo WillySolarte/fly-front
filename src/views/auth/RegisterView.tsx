@@ -6,6 +6,7 @@ import ErrorMessage from "../../components/ErrorMessage"
 import { createAccount } from "../../services/authServices";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function RegisterView() {
 
@@ -18,19 +19,27 @@ export default function RegisterView() {
 
     const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<RegisterForm>({ defaultValues: initialValues });
 
+    const queryClient = useQueryClient()
+
+    const {mutate} = useMutation({
+        mutationFn: createAccount,
+        onError: (error) => {
+            toast.error(error.message)
+        },
+        onSuccess: (data) => {
+            toast.success(data)
+            reset()
+            queryClient.invalidateQueries({queryKey: ['allInformation']})
+        }
+    })
+
     const password = watch("password");
+
+    
 
     const handleRegister = async (formData: RegisterForm) => {
 
-        const {data, error} = await createAccount(formData)
-        if(error){
-            toast.error(error)
-        }
-        else if(data){
-            toast.success(data.msg)
-        }
-        
-        reset()
+        mutate(formData)
 
     };
 

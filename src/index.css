@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.card-reservation{
+    transition: transform;
+    transition-duration: 200ms;
+}
+
+.card-reservation:hover{
+    cursor: pointer;
+    transform: scale(0.95);
+}
+
+th{
+    border: 1px solid #000
+}
+td{
+    text-align: center;
+    border: 1px solid #000;
+}

@@ -1,45 +1,19 @@
-import { useQueryClient } from "@tanstack/react-query"
-import { formatDate } from "../../helpers/utilities"
-import { Flight } from "../../types/schemas"
-import { createReserve } from "../../services/flightServices"
-import { useMutation } from "@tanstack/react-query"
-import { toast } from "react-toastify"
+import { Reserve } from "../../types/schemas"
+
 
 type ReserveCardProps = {
-    flight: Flight
+    reserve: Reserve
 }
-export default function ReserveCard({ flight }: ReserveCardProps) {
+export default function ReserveCard({reserve} : ReserveCardProps) {
 
-    const queryClient = useQueryClient()
-
-    const {mutate} = useMutation({
-        mutationFn: createReserve,
-        onError: (error) => {
-            toast.error(error.message)
-        },
-        onSuccess: (dataM) => {
-            queryClient.invalidateQueries({queryKey: ['flightsReserve']})
-            queryClient.invalidateQueries({queryKey: ['dataEstadistics']})
-            toast.success(dataM)
-        }
-    })
+    
 
     return (
-        <div className="flex flex-col border border-gray-200 rounded-lg mx-auto my-4 min-w-[400px] p-5 shadow-md">
-            <div className="">
-
-
-                <p><span className="font-bold">Nombre:</span> {""} {flight.name} </p>
-                <p><span className="font-bold">Origen:</span> {""} {flight.origin} </p>
-                <p><span className="font-bold">Destino:</span> {""} {flight.destination} </p>
-                <p><span className="font-bold">Precio:</span> {""} {flight.price} </p>
-                <p><span className="font-bold">Aerolínea:</span> {""} {flight.airline} </p>
-                <p><span className="font-bold">Partida:</span> {""} {formatDate(flight.leave)} </p>
-                <p><span className="font-bold">Llegada:</span> {""} {formatDate(flight.arrive)} </p>
-
-
-            </div>
-            <button onClick={() => mutate(flight.id)} type="button" className="my-5 mx-auto border rounded bg-gray-700 text-white text-center w-32 hover:bg-gray-900">Reservar</button>
+        <div className="border border-slate-300 p-3 rounded-lg w-80 my-2 card-reservation">
+            <p className="text-sm">Vuelo: <span className="text-slate-400"> {reserve.vuelo.code} </span></p>
+            <p className="text-sm">Origen: <span className="text-slate-400"> {reserve.vuelo.origin} </span></p>
+            <p className="text-sm">Destino: <span className="text-slate-400"> {reserve.vuelo.destination} </span></p>
+            <p className="text-sm">Aerolínea: <span className="text-slate-400"> {reserve.vuelo.aerline.name} </span></p>
 
         </div>
     )

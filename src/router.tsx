@@ -18,11 +18,12 @@ export default function Router() {
 
         <Route element={<FlightsLayout />} >
           <Route path="/" element={<PrincipalView />} index/>
+          <Route path="/information" element={<MyReservesView />} />
           <Route element={<UserActiveLayout/>} >
             <Route path="/register/flight" element={<RegisterFlightView />} />
             <Route path="/flight/my-flights" element={<MyFlightsView />} />
             <Route path="/flight/edit/:flightId?" element={<EditFlightView />} />
-            <Route path="/my-reserves" element={<MyReservesView />} />
+            <Route path="/information" element={<MyReservesView />} />
           </Route>
           
 

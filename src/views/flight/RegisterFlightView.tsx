@@ -36,6 +36,7 @@ export default function RegisterFlightView() {
             reset()
             queryClient.invalidateQueries({queryKey: ['Myflights']})
             queryClient.invalidateQueries({queryKey: ['flights']})
+            queryClient.invalidateQueries({queryKey: ['myReserves']})
             
         }
     })

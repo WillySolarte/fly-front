@@ -40,11 +40,12 @@ export default function FlightsLayout() {
                 </div>
                 <div className=" flex items-center justify-center text-white gap-x-4 px-6">
                     <Link to={'/'} >Home</Link>
+                    <Link to={`/information`}  >Información</Link>
                     {exist && (
                         <>
                             <Link to={'/register/flight'}  >Registrar vuelo</Link>
                             <Link to={'/flight/my-flights'}  >Mis vuelos</Link>
-                            <Link to={`/my-reserves`}  >Mis reservas</Link>
+                            
                         </>
                         
                     )}

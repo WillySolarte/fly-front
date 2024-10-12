@@ -86,3 +86,34 @@ export const reserveSchema = z.object({
        
 })
 export const reservesSchema = z.array(reserveSchema)
+
+export type Reserve = z.infer<typeof reserveSchema>
+
+/** Information count */
+
+export const reservesDataScheman = z.object({
+    flightId: z.string(),
+    reservationsCount: z.number(),
+    vuelo:z.object( {
+        code: z.string(),
+        origin: z.string(),
+        destination: z.string()
+    })
+})
+
+export const informationSchema = z.object({
+    aerlines: z.object({
+        status: z.string(),
+        value: z.number()
+    }),
+    flights: z.object({
+        status: z.string(),
+        value: z.number()
+    }),
+    users: z.object({
+        status: z.string(),
+        value: z.number()
+    }),
+    reserves: z.array(reservesDataScheman)
+})
+
